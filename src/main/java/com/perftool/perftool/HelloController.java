@@ -46,7 +46,7 @@ public class HelloController {
 		List aList = new ArrayList();
 		DepartmentTO deptTO = null;
 		try {
-			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "system", "padma2280");
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "system", "XXXXXXXXX");
 			Statement smt = con.createStatement();
 			String s = "select deptno,dname  from dept";
 			ResultSet r = smt.executeQuery(s);
