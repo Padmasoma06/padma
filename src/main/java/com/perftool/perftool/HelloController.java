@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,15 +23,13 @@ public class HelloController {
 
 	@RequestMapping("/signIn")
 	public String signIn(@RequestParam("username") String username, @RequestParam("password") String password)
-			{
+	{
 		
-		    DAO b=new DAO();
-			HashMap<DAO, String> b1=new HashMap<DAO, String>();
-			b1.put(b, "username");
-			b1.put(b, "password");
-			return "b1";
+		//check if user is valid by making sure entered user name is correct or wrong.
 		
-		}
+		return "";
+		
+	}
 		
 	
 
@@ -38,21 +38,31 @@ public class HelloController {
 		return "email has been sent to reset your password---";
 	}
 
-	@RequestMapping("/aboutUs")
-	public String aboutUs() {
-		return "We proviide an efficient and effective Performance Analysis tool";
-	}
+	
 
 	
 	@RequestMapping("/departments")
-	public HashMap<Integer, String> departments() {
-		HashMap<Integer, String> s=new HashMap<Integer, String>();
-		s.put(1, "firstname");
-		s.put(2, "lastname");
-		s.put(3, "Achievements");
-		s.put(4, "contribution");
-		s.put(5, "performance report");
-		return s;
+	public List departments() {
+		List aList = new ArrayList();
+		DepartmentTO deptTO = null;
+		try {
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "system", "padma2280");
+			Statement smt = con.createStatement();
+			String s = "select deptno,dname  from dept";
+			ResultSet r = smt.executeQuery(s);
+			while (r.next()) {
+				deptTO = new DepartmentTO();
+ 				deptTO.setDeptNo(Integer.parseInt(r.getString("deptno")));
+ 				deptTO.setDeptName(r.getString("dname"));
+ 				aList.add(deptTO);
+ 			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return aList;
 		
 	   
 	}
@@ -61,5 +71,27 @@ public class HelloController {
 	@RequestMapping("/save")
 	public String save() {
 		return "saved the data entered in the corresponding fields";
+	}
+	
+	
+	public static void main(String[] args) {
+		try {
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "system", "padma2280");
+			Statement smt = con.createStatement();
+			String s = "select deptno,dname  from dept";
+			ResultSet r = smt.executeQuery(s);
+			while (r.next()) {
+				String dno = r.getString("deptno");
+				String dname = r.getString("dname");
+				System.out.print(dno);
+				System.out.println(dname);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 }
